@@ -7,11 +7,10 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google/google/acctest"
 	"github.com/hashicorp/terraform-provider-google/google/envvar"
-	rmClient "github.com/hashicorp/terraform-provider-google/google/services/resourcemanager/client"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	cloudresourcemanager "google.golang.org/api/cloudresourcemanager/v1"
+	resourceManager "google.golang.org/api/cloudresourcemanager/v1"
 )
 
 func TestAccResourceManagerLien_basic(t *testing.T) {
@@ -19,7 +18,7 @@ func TestAccResourceManagerLien_basic(t *testing.T) {
 
 	projectName := fmt.Sprintf("tf-test-%s", acctest.RandString(t, 10))
 	org := envvar.GetTestOrgFromEnv(t)
-	var lien cloudresourcemanager.Lien
+	var lien resourceManager.Lien
 
 	acctest.VcrTest(t, resource.TestCase{
 		PreCheck:                 func() { acctest.AccTestPreCheck(t) },
@@ -49,7 +48,7 @@ func TestAccResourceManagerLien_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckResourceManagerLienExists(t *testing.T, n, projectName string, lien *cloudresourcemanager.Lien) resource.TestCheckFunc {
+func testAccCheckResourceManagerLienExists(t *testing.T, n, projectName string, lien *resourceManager.Lien) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -62,7 +61,7 @@ func testAccCheckResourceManagerLienExists(t *testing.T, n, projectName string, 
 
 		config := acctest.GoogleProviderConfig(t)
 
-		found, err := rmClient.NewClient(config, config.UserAgent).Liens.List().Parent(fmt.Sprintf("projects/%s", projectName)).Do()
+		found, err := config.NewResourceManagerClient(config.UserAgent).Liens.List().Parent(fmt.Sprintf("projects/%s", projectName)).Do()
 		if err != nil {
 			return err
 		}
@@ -85,7 +84,7 @@ func testAccCheckResourceManagerLienDestroyProducer(t *testing.T) func(s *terraf
 				continue
 			}
 
-			_, err := rmClient.NewClient(config, config.UserAgent).Liens.List().Parent(fmt.Sprintf("projects/%s", rs.Primary.Attributes["parent"])).Do()
+			_, err := config.NewResourceManagerClient(config.UserAgent).Liens.List().Parent(fmt.Sprintf("projects/%s", rs.Primary.Attributes["parent"])).Do()
 			if err == nil {
 				return fmt.Errorf("Lien %s still exists", rs.Primary.ID)
 			}

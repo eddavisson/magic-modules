@@ -114,7 +114,7 @@ func (w *ContainerOperationWaiter) TargetStates() []string {
 
 func ContainerOperationWait(config *transport_tpg.Config, op *container.Operation, project, location, activity, userAgent string, timeout time.Duration) error {
 	w := &ContainerOperationWaiter{
-		Service:             NewClient(config, userAgent),
+		Service:             config.NewContainerClient(userAgent),
 		Context:             config.Context,
 		Op:                  op,
 		Project:             project,

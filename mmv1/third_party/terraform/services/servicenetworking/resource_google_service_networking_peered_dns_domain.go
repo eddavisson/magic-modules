@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-provider-google/google/registry"
-	rmClient "github.com/hashicorp/terraform-provider-google/google/services/resourcemanager/client"
 	"github.com/hashicorp/terraform-provider-google/google/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google/google/transport"
 
@@ -126,7 +125,7 @@ func resourceGoogleServiceNetworkingPeeredDNSDomainCreate(d *schema.ResourceData
 		Name:      name,
 	}
 
-	apiService := NewClient(config, userAgent)
+	apiService := config.NewServiceNetworkingClient(userAgent)
 	peeredDnsDomainsService := servicenetworking.NewServicesProjectsGlobalNetworksPeeredDnsDomainsService(apiService)
 	createCall := peeredDnsDomainsService.Create(parent, r)
 	if config.UserProjectOverride {
@@ -169,7 +168,7 @@ func resourceGoogleServiceNetworkingPeeredDNSDomainRead(d *schema.ResourceData, 
 	network := d.Get("network").(string)
 	parent := fmt.Sprintf("services/%s/projects/%s/global/networks/%s", service, projectNumber, network)
 
-	apiService := NewClient(config, userAgent)
+	apiService := config.NewServiceNetworkingClient(userAgent)
 	peeredDnsDomainsService := servicenetworking.NewServicesProjectsGlobalNetworksPeeredDnsDomainsService(apiService)
 	readCall := peeredDnsDomainsService.List(parent)
 	if config.UserProjectOverride {
@@ -225,7 +224,7 @@ func resourceGoogleServiceNetworkingPeeredDNSDomainDelete(d *schema.ResourceData
 	}
 
 	name := d.Get("name").(string)
-	apiService := NewClient(config, userAgent)
+	apiService := config.NewServiceNetworkingClient(userAgent)
 	peeredDnsDomainsService := servicenetworking.NewServicesProjectsGlobalNetworksPeeredDnsDomainsService(apiService)
 
 	if err := transport_tpg.Retry(transport_tpg.RetryOptions{
@@ -253,7 +252,7 @@ func getProjectNumber(d *schema.ResourceData, config *transport_tpg.Config, proj
 		billingProject = bp
 	}
 
-	getProjectCall := rmClient.NewClient(config, userAgent).Projects.Get(project)
+	getProjectCall := config.NewResourceManagerClient(userAgent).Projects.Get(project)
 	if config.UserProjectOverride {
 		getProjectCall.Header().Add("X-Goog-User-Project", billingProject)
 	}

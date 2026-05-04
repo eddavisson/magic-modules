@@ -48,7 +48,6 @@ mmv1/build/*
 
 # vscode workspace settings
 .vscode
-*.code-workspace
 
 # ignore serialization generation build data
 tpgtools/temp.serial

@@ -302,7 +302,8 @@ func (t *testRoundTripper) RoundTrip(r *http.Request) (*http.Response, error) {
 	if err != nil {
 		return response, err
 	}
-	if !r.URL.Query().Has("projection") || response.StatusCode != http.StatusOK {
+	expectedPath := fmt.Sprintf("/storage/v1/b/%s/o/%s", t.bucketName, t.objectName)
+	if t.done || r.URL.Path != expectedPath || r.Host != "storage.googleapis.com" {
 		return response, err
 	}
 	t.done = true
@@ -365,7 +366,6 @@ func TestAccStorageObjectAcl_noOwner(t *testing.T) {
 			{
 				Config:             testGoogleStorageObjectsAclBasic1(bucketName, objectName),
 				ExpectNonEmptyPlan: true,
-				PlanOnly:           true,
 			},
 		},
 	})
@@ -376,7 +376,7 @@ func testAccCheckGoogleStorageObjectAcl(t *testing.T, bucket, object, roleEntity
 		roleEntity, _ := storage.GetRoleEntityPair(roleEntityS)
 		config := acctest.GoogleProviderConfig(t)
 
-		res, err := storage.NewClient(config, config.UserAgent).ObjectAccessControls.Get(bucket,
+		res, err := config.NewStorageClient(config.UserAgent).ObjectAccessControls.Get(bucket,
 			object, roleEntity.Entity).Do()
 
 		if err != nil {
@@ -396,7 +396,7 @@ func testAccCheckGoogleStorageObjectAclDelete(t *testing.T, bucket, object, role
 		roleEntity, _ := storage.GetRoleEntityPair(roleEntityS)
 		config := acctest.GoogleProviderConfig(t)
 
-		_, err := storage.NewClient(config, config.UserAgent).ObjectAccessControls.Get(bucket,
+		_, err := config.NewStorageClient(config.UserAgent).ObjectAccessControls.Get(bucket,
 			object, roleEntity.Entity).Do()
 
 		if err != nil {
@@ -419,7 +419,7 @@ func testAccStorageObjectAclDestroyProducer(t *testing.T) func(s *terraform.Stat
 			bucket := rs.Primary.Attributes["bucket"]
 			object := rs.Primary.Attributes["object"]
 
-			_, err := storage.NewClient(config, config.UserAgent).ObjectAccessControls.List(bucket, object).Do()
+			_, err := config.NewStorageClient(config.UserAgent).ObjectAccessControls.List(bucket, object).Do()
 
 			if err == nil {
 				return fmt.Errorf("Acl for bucket %s still exists", bucket)

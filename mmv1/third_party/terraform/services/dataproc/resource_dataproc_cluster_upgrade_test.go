@@ -44,6 +44,8 @@ func TestAccDataprocClusterLabelsMigration_withoutLabels_withoutChanges(t *testi
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.with_labels", &cluster),
 
 					resource.TestCheckNoResourceAttr("google_dataproc_cluster.with_labels", "labels.%"),
+					// GCP adds 4 and goog-dataproc-autozone is added internally, so expect 5.
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.%", "5"),
 				),
 			},
 			{
@@ -54,6 +56,8 @@ func TestAccDataprocClusterLabelsMigration_withoutLabels_withoutChanges(t *testi
 
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.%", "1"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.key1", "value1"),
+					// We only provide one, but GCP adds 4 and goog-dataproc-autozone is added internally, so expect 6.
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.%", "6"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.key1", "value1"),
 				),
 			},
@@ -94,6 +98,8 @@ func TestAccDataprocClusterLabelsMigration_withLabels_withoutChanges(t *testing.
 
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.%", "1"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.key1", "value1"),
+					// We only provide one, but GCP adds 4 and goog-dataproc-autozone is added internally, so expect 6.
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.%", "6"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.key1", "value1"),
 				),
 			},
@@ -106,6 +112,8 @@ func TestAccDataprocClusterLabelsMigration_withLabels_withoutChanges(t *testing.
 					// We only provide one, so expect 1.
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.%", "1"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.key2", "value2"),
+					// We only provide one, but GCP adds 4 and goog-dataproc-autozone is added internally, so expect 6.
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.%", "6"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.key2", "value2"),
 				),
 			},
@@ -146,6 +154,8 @@ func TestAccDataprocClusterLabelsMigration_withUpdate(t *testing.T) {
 
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.%", "1"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "labels.key1", "value1"),
+					// We only provide one, but GCP adds 4 and goog-dataproc-autozone is added internally, so expect 6.
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.%", "6"),
 					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.key1", "value1"),
 				),
 			},
@@ -156,6 +166,8 @@ func TestAccDataprocClusterLabelsMigration_withUpdate(t *testing.T) {
 					testAccCheckDataprocClusterExists(t, "google_dataproc_cluster.with_labels", &cluster),
 
 					resource.TestCheckNoResourceAttr("google_dataproc_cluster.with_labels", "labels.%"),
+					// We only provide one, but GCP adds 4 and goog-dataproc-autozone is added internally, so expect 5.
+					resource.TestCheckResourceAttr("google_dataproc_cluster.with_labels", "effective_labels.%", "5"),
 				),
 			},
 		},

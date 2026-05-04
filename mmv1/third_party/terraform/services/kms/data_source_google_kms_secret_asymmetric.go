@@ -103,7 +103,7 @@ func dataSourceGoogleKmsSecretAsymmetricRead(ctx context.Context, d *schema.Reso
 		Ciphertext:       base64CipherText,
 		CiphertextCrc32c: int64(ciphertextCRC32C)}
 
-	client := NewClientWithCtx(ctx, config, userAgent)
+	client := config.NewKmsClientWithCtx(ctx, userAgent)
 	if client == nil {
 		return fmt.Errorf("failed to get a KMS client")
 	}

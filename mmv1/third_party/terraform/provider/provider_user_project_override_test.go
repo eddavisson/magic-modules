@@ -320,10 +320,9 @@ func testAccProviderIndirectUserProjectOverride(t *testing.T) {
 				Config: testAccProviderIndirectUserProjectOverride_step2(pid, accessToken, true),
 			},
 			{
-				ResourceName:            "google_kms_crypto_key.project-2-key",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"skip_initial_version_creation", "labels", "terraform_labels"},
+				ResourceName:      "google_kms_crypto_key.project-2-key",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			{
 				Config: testAccProviderIndirectUserProjectOverride_step3(accessToken, true),

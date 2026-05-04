@@ -75,10 +75,6 @@ var (
 					startDate: newDate(2025, 12, 3),
 					endDate:   newDate(2025, 12, 15),
 				},
-				{
-					startDate: newDate(2026, 4, 19),
-					endDate:   newDate(2026, 4, 26),
-				},
 			},
 		},
 		"hao-nan-li": {
@@ -120,10 +116,6 @@ var (
 				{
 					startDate: newDate(2025, 11, 11),
 					endDate:   newDate(2025, 11, 24),
-				},
-				{
-					startDate: newDate(2026, 04, 14),
-					endDate:   newDate(2026, 04, 19),
 				},
 			},
 		},
@@ -169,10 +161,6 @@ var (
 					startDate: newDate(2025, 5, 22),
 					endDate:   newDate(2025, 6, 7),
 				},
-				{
-					startDate: newDate(2026, 4, 13),
-					endDate:   newDate(2026, 4, 19),
-				},
 			},
 		},
 		"trodge": {
@@ -199,7 +187,6 @@ var (
 
 	// This is for new team members who are onboarding
 	trustedContributors = map[string]struct{}{
-		"bbasata":  struct{}{},
-		"tavasyag": struct{}{},
+		"bbasata": struct{}{},
 	}
 )

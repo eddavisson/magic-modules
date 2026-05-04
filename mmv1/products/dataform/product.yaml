@@ -15,8 +15,6 @@
 name: 'Dataform'
 display_name: 'Dataform'
 versions:
-  - name: 'ga'
-    base_url: 'https://dataform.googleapis.com/v1/'
   - name: 'beta'
     base_url: 'https://dataform.googleapis.com/v1beta1/'
 scopes:

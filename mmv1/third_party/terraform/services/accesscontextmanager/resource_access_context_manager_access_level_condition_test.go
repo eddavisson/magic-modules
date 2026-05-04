@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/terraform-provider-google/google/acctest"
 	"github.com/hashicorp/terraform-provider-google/google/envvar"
-	"github.com/hashicorp/terraform-provider-google/google/services/accesscontextmanager"
 	"github.com/hashicorp/terraform-provider-google/google/tpgresource"
 	transport_tpg "github.com/hashicorp/terraform-provider-google/google/transport"
 )
@@ -67,7 +66,7 @@ func testAccCheckAccessContextManagerAccessLevelConditionPresent(t *testing.T, n
 		}
 
 		config := acctest.GoogleProviderConfig(t)
-		url, err := tpgresource.ReplaceVarsForTest(config, rs, transport_tpg.BaseUrl(accesscontextmanager.Product, config)+"{{access_level}}")
+		url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}{{access_level}}")
 		if err != nil {
 			return err
 		}
@@ -99,7 +98,8 @@ func testAccCheckAccessContextManagerAccessLevelConditionDestroyProducer(t *test
 			}
 
 			config := acctest.GoogleProviderConfig(t)
-			url, err := tpgresource.ReplaceVarsForTest(config, rs, transport_tpg.BaseUrl(accesscontextmanager.Product, config)+"{{access_level}}")
+
+			url, err := tpgresource.ReplaceVarsForTest(config, rs, "{{AccessContextManagerBasePath}}{{access_level}}")
 			if err != nil {
 				return err
 			}

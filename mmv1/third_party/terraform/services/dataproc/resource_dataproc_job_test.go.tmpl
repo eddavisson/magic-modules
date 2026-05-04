@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-provider-google/google/acctest"
 	tpgdataproc "github.com/hashicorp/terraform-provider-google/google/services/dataproc"
-	"github.com/hashicorp/terraform-provider-google/google/services/storage"
 	"github.com/hashicorp/terraform-provider-google/google/tpgresource"
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/dataproc/v1"
@@ -366,7 +365,7 @@ func testAccCheckDataprocJobDestroyProducer(t *testing.T) func(s *terraform.Stat
 
 			parts := strings.Split(rs.Primary.ID, "/")
 			job_id := parts[len(parts)-1]
-			_, err = tpgdataproc.NewClient(config, config.UserAgent).Projects.Regions.Jobs.Get(
+			_, err = config.NewDataprocClient(config.UserAgent).Projects.Regions.Jobs.Get(
 				project, attributes["region"], job_id).Do()
 			if err != nil {
 				if gerr, ok := err.(*googleapi.Error); ok && gerr.Code == 404 {
@@ -401,7 +400,7 @@ func testAccCheckDataprocJobCompletesSuccessfully(t *testing.T, n string, job *d
 			return waitErr
 		}
 
-		completeJob, err := tpgdataproc.NewClient(config, config.UserAgent).Projects.Regions.Jobs.Get(
+		completeJob, err := config.NewDataprocClient(config.UserAgent).Projects.Regions.Jobs.Get(
 			project, region, job.Reference.JobId).Do()
 		if err != nil {
 			return err
@@ -414,12 +413,12 @@ func testAccCheckDataprocJobCompletesSuccessfully(t *testing.T, n string, job *d
 			if len(u) != 2 {
 				return fmt.Errorf("Job completed in ERROR state but no valid log URI found")
 			}
-			l, err := storage.NewClient(config, config.UserAgent).Objects.List(u[0]).Prefix(u[1]).Do()
+			l, err := config.NewStorageClient(config.UserAgent).Objects.List(u[0]).Prefix(u[1]).Do()
 			if err != nil {
 				return errwrap.Wrapf("Job completed in ERROR state, found error when trying to list logs: {{"{{"}}err{{"}}"}}", err)
 			}
 			for _, item := range l.Items {
-				resp, err := storage.NewClient(config, config.UserAgent).Objects.Get(item.Bucket, item.Name).Download()
+				resp, err := config.NewStorageClient(config.UserAgent).Objects.Get(item.Bucket, item.Name).Download()
 				if err != nil {
 					return errwrap.Wrapf("Job completed in ERROR state, found error when trying to read logs: {{"{{"}}err{{"}}"}}", err)
 				}
@@ -458,7 +457,7 @@ func testAccCheckDataprocJobExists(t *testing.T, n string, job *dataproc.Job) re
 			return err
 		}
 
-		found, err := tpgdataproc.NewClient(config, config.UserAgent).Projects.Regions.Jobs.Get(
+		found, err := config.NewDataprocClient(config.UserAgent).Projects.Regions.Jobs.Get(
 			project, rs.Primary.Attributes["region"], jobId).Do()
 		if err != nil {
 			return err

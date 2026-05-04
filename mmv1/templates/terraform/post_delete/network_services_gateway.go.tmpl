@@ -1,4 +1,3 @@
-{{- if not $.ProductMetadata.IsTgcCompiler }}
 if d.Get("delete_swg_autogen_router_on_destroy").(bool) {
 	log.Print("[DEBUG] The field delete_swg_autogen_router_on_destroy is true. Deleting swg_autogen_router.")
 	gateways, err := gatewaysSameLocation(d, config, billingProject, userAgent)
@@ -14,4 +13,3 @@ if d.Get("delete_swg_autogen_router_on_destroy").(bool) {
 		}
 	}
 }
-{{- end }}

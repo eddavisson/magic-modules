@@ -110,7 +110,7 @@ func SqlAdminOperationWaitTime(config *transport_tpg.Config, res interface{}, pr
 	}
 
 	w := &SqlAdminOperationWaiter{
-		Service: NewClient(config, userAgent),
+		Service: config.NewSqlAdminClient(userAgent),
 		Op:      op,
 		Project: project,
 	}

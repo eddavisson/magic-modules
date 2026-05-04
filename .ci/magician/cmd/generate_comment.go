@@ -84,7 +84,6 @@ type Errors struct {
 }
 
 type diffCommentData struct {
-	CommitSHA            string
 	Diffs                []Diff
 	BreakingChanges      []BreakingChange
 	MissingServiceLabels []string
@@ -223,9 +222,7 @@ func execGenerateComment(prNumber int, ghTokenMagicModules, buildId, buildStep, 
 	}
 
 	// Initialize repos
-	data := diffCommentData{
-		CommitSHA: commitSha,
-	}
+	data := diffCommentData{}
 	for _, repo := range []*source.Repo{&tpgRepo, &tpgbRepo, &tgcRepo, &tfoicsRepo} {
 		errors[repo.Title] = []string{}
 		repo.Branch = newBranch
@@ -522,14 +519,9 @@ func execGenerateComment(prNumber int, ghTokenMagicModules, buildId, buildStep, 
 		fmt.Printf("Data: %v\n", data)
 		return fmt.Errorf("error formatting message: %w", err)
 	}
-	commentId, err := gh.PostComment(strconv.Itoa(prNumber), message)
-	if err != nil {
+	if err := gh.PostComment(strconv.Itoa(prNumber), message); err != nil {
 		fmt.Println("Comment: ", message)
 		return fmt.Errorf("error posting comment to PR %d: %w", prNumber, err)
-	}
-
-	if err := rnr.WriteFile("/workspace/diff_comment_id.txt", strconv.Itoa(commentId)); err != nil {
-		fmt.Printf("Warning: failed to save comment ID to file: %v\n", err)
 	}
 	return nil
 }

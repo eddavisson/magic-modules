@@ -83,7 +83,7 @@ func execRequestReviewer(prNumber string, gh GithubClient) error {
 
 		if newPrimaryReviewer != "" {
 			comment := github.FormatReviewerComment(newPrimaryReviewer)
-			_, err = gh.PostComment(prNumber, comment)
+			err = gh.PostComment(prNumber, comment)
 			if err != nil {
 				return err
 			}

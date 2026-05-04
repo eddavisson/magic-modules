@@ -42,7 +42,7 @@ func AppEngineOperationWaitTimeWithResponse(config *transport_tpg.Config, res in
 	}
 
 	w := &AppEngineOperationWaiter{
-		Service: NewClient(config, userAgent),
+		Service: config.NewAppEngineClient(userAgent),
 		AppId:   appId,
 	}
 
@@ -63,7 +63,7 @@ func AppEngineOperationWaitTime(config *transport_tpg.Config, res interface{}, a
 	}
 
 	w := &AppEngineOperationWaiter{
-		Service: NewClient(config, userAgent),
+		Service: config.NewAppEngineClient(userAgent),
 		AppId:   appId,
 	}
 

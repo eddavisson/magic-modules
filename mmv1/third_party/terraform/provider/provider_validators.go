@@ -9,8 +9,6 @@ import (
 	"strings"
 
 	googleoauth "golang.org/x/oauth2/google"
-
-	"github.com/hashicorp/terraform-provider-google/google/verify"
 )
 
 func ValidateCredentials(v interface{}, k string) (warnings []string, errors []error) {
@@ -36,11 +34,6 @@ func ValidateCredentials(v interface{}, k string) (warnings []string, errors []e
 	}
 
 	return
-}
-
-func ValidateCustomEndpoint(v interface{}, k string) (ws []string, errors []error) {
-	re := `.*/[^/]+/$`
-	return verify.ValidateRegexp(re)(v, k)
 }
 
 func ValidateEmptyStrings(v interface{}, k string) (warnings []string, errors []error) {

@@ -78,7 +78,7 @@ func (w *DataprocJobOperationWaiter) TargetStates() []string {
 
 func DataprocJobOperationWait(config *transport_tpg.Config, region, projectId, jobId, activity, userAgent string, timeout time.Duration, waitForCompletion bool) error {
 	w := &DataprocJobOperationWaiter{
-		Service:           NewClient(config, userAgent),
+		Service:           config.NewDataprocClient(userAgent),
 		Region:            region,
 		ProjectId:         projectId,
 		JobId:             jobId,
@@ -118,7 +118,7 @@ func (w *DataprocDeleteJobOperationWaiter) QueryOp() (interface{}, error) {
 func DataprocDeleteOperationWait(config *transport_tpg.Config, region, projectId, jobId, activity, userAgent string, timeout time.Duration) error {
 	w := &DataprocDeleteJobOperationWaiter{
 		DataprocJobOperationWaiter{
-			Service:   NewClient(config, userAgent),
+			Service:   config.NewDataprocClient(userAgent),
 			Region:    region,
 			ProjectId: projectId,
 			JobId:     jobId,
